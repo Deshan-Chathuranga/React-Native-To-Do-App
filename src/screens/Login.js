@@ -6,7 +6,7 @@ import {
   TextInput,
   TouchableWithoutFeedback,
   Keyboard,
-
+ActivityIndicator,
   Alert,
 
 } from "react-native";
@@ -19,6 +19,7 @@ const Login = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoggedin, setIsLoggedin] = useState(false);
+  const[isLoading,setIsLoading]=useState(false);
 
   const setToken = async(key,value)=>{
     await SecureStore.setItemAsync(key,value);
@@ -27,6 +28,7 @@ const Login = ({ navigation }) => {
 
 
   const handleLogin =  () => {
+    setIsLoading(true);
     axios
       .post(
         "https://api-nodejs-todolist.herokuapp.com/user/login",
@@ -40,6 +42,7 @@ const Login = ({ navigation }) => {
       )
 
       .then((response) => {
+        setIsLoading(false)
         const user = response.data.user;
         const token = response.data.token;
 
@@ -161,6 +164,9 @@ const Login = ({ navigation }) => {
           >
             Already a member
           </Text>
+          <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+            {isLoading && <ActivityIndicator color="#00ff00" size="large"/>}
+      </View>
           {/* </Button> */}
         </View>
         <Text
